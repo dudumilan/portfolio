@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101a12">
+<title>Carlos Eduardo Milan Ferreira — Portfólio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+  :root{
+    --shell:#9a9b72;
+    --shell-hi:#d3cf9d;
+    --shell-edge:#737650;
+    --shell-dark:#3f4a2d;
+    --shell-text:#27321f;
+    --screen-bg:#101a12;
+    --phosphor:#b9f59b;
+    --phosphor-dim:#70a967;
+    --phosphor-faint:#294b2c;
+    --amber:#d4b85f;
+    --gold:#b8c86b;
+    --petal:#9bd68a;
+    --rust:#c5a858;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0 0 40px;
+    background:#070c08;
+    color:var(--phosphor);
+    font-family:'Share Tech Mono',monospace;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{font-family:'VT323',monospace;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--amber); outline-offset:2px;}
+
+ 
+  .tv-shell{
+    max-width:1180px;
+    margin:60px auto 20px;
+    position:relative;
+    background:linear-gradient(180deg, var(--shell-hi), var(--shell) 40%, var(--shell-edge));
+    border-radius:26px;
+    padding:22px 22px 0;
+    box-shadow:0 55px 120px -35px rgba(0,0,0,.85), inset 0 2px 0 rgba(255,255,255,.5);
+  }
+
+  .antenna{position:absolute; top:-44px; left:50%; transform:translateX(-50%); width:110px; height:48px; pointer-events:none;}
+  @media (max-width:520px){.antenna{display:none;}}
+
+  .tv-brand-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:2px 14px 16px; color:var(--shell-text);
+    font-size:11.5px; letter-spacing:.08em;
+  }
+  .tv-brand-row .led{display:flex; align-items:center; gap:6px;}
+  .tv-brand-row .led i{
+    width:8px; height:8px; border-radius:50%; background:var(--amber);
+    box-shadow:0 0 6px 1px var(--amber); display:inline-block;
+  }
+
+  .tv-screen-frame{background:var(--shell-dark); border-radius:20px; padding:12px; margin-bottom:18px;}
+  .tv-screen{
+    position:relative;
+    background:radial-gradient(ellipse at 50% 0%, #1b2b1b 0%, var(--screen-bg) 62%);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:inset 0 0 55px rgba(0,0,0,.85), inset 0 0 2px rgba(185,245,155,.25);
+  }
+  .static-canvas{
+    position:absolute; inset:0; width:100%; height:100%;
+    image-rendering:pixelated; opacity:.05; mix-blend-mode:overlay;
+    pointer-events:none; z-index:4; transition:opacity .35s ease;
+  }
+  .static-canvas.burst{opacity:.55;}
+  .scanlines{
+    position:absolute; inset:0; z-index:5; pointer-events:none;
+    background:repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 1px, rgba(0,0,0,.22) 2px, rgba(0,0,0,0) 3px);
+    mix-blend-mode:multiply;
+  }
+  .vignette{
+    position:absolute; inset:0; z-index:6; pointer-events:none;
+    background:radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,.7) 100%);
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .tv-screen{animation:flicker 6.5s ease-in-out infinite;}
+    @keyframes flicker{0%,96%,100%{filter:brightness(1);} 97%{filter:brightness(1.05);} 98%{filter:brightness(.96);}}
+  }
+  .channel-readout{
+    position:absolute; top:14px; right:16px; z-index:8;
+    font-family:'VT323',monospace; font-size:18px; letter-spacing:.08em;
+    color:var(--amber); background:rgba(0,0,0,.4); padding:4px 10px; border-radius:3px;
+    display:flex; align-items:center; gap:7px; opacity:0; transition:opacity .35s ease;
+  }
+  .channel-readout.show{opacity:1;}
+  .channel-readout .dot{width:7px; height:7px; border-radius:50%; background:#d4b85f; box-shadow:0 0 6px #d4b85f;}
+
+  .tv-content{position:relative; z-index:10;}
+  section{padding:50px 46px 44px; border-bottom:1px dashed var(--phosphor-faint);}
+  section:last-of-type{border-bottom:none;}
+
+  .eyebrow{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--phosphor-dim); margin-bottom:8px;}
+  .sub{font-size:13px; color:var(--phosphor-dim); margin-bottom:30px; max-width:600px; line-height:1.6;}
+  h2{
+    font-family:'VT323',monospace; font-size:34px; font-weight:400; letter-spacing:.02em;
+    margin:0 0 4px; color:var(--phosphor); text-shadow:0 0 10px rgba(185,245,155,.25);
+  }
+  h3{font-family:'Share Tech Mono',monospace; font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--amber); margin:34px 0 16px;}
+
+  h1.name{
+    font-family:'VT323',monospace; font-size:clamp(34px,5.4vw,58px); line-height:1.05;
+    margin:0 0 12px; color:var(--phosphor); text-shadow:0 0 12px rgba(185,245,155,.3);
+  }
+  .level-badge{
+    display:inline-block; font-size:12px; letter-spacing:.1em;
+    border:1px solid var(--amber); color:var(--amber); padding:4px 10px; border-radius:3px; margin-bottom:22px;
+  }
+
+  .meter{margin:20px 0 28px; max-width:480px;}
+  .meter-label{display:flex; justify-content:space-between; font-size:12px; letter-spacing:.05em; color:var(--phosphor); margin-bottom:6px;}
+  .meter-track{height:12px; border:1px solid var(--phosphor-faint); border-radius:2px; background:rgba(185,245,155,.05); overflow:hidden;}
+  .meter-fill{height:100%; background:linear-gradient(90deg,var(--phosphor-dim),var(--phosphor)); width:var(--target);}
+  @media (prefers-reduced-motion:no-preference){
+    .meter-fill{animation:grow 1.7s ease-out;}
+    @keyframes grow{from{width:0;}}
+  }
+  .meter-note{font-size:11.5px; color:var(--phosphor-dim); margin-top:6px; max-width:460px; line-height:1.6;}
+
+  p.lead{max-width:640px; font-size:15px; line-height:1.8; color:var(--phosphor); margin:0 0 14px;}
+
+  .badges{display:flex; flex-wrap:wrap; gap:10px; margin:22px 0 8px;}
+  .badge{font-size:11.5px; letter-spacing:.04em; border:1px solid var(--phosphor-faint); color:var(--phosphor); padding:6px 11px; border-radius:3px;}
+
+  .cta-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px;}
+  .btn{font-family:'Share Tech Mono',monospace; font-size:12.5px; padding:11px 18px; border-radius:3px; text-decoration:none; border:1px solid var(--phosphor-faint);}
+  .btn.primary{background:var(--amber); color:#2a1a06; font-weight:700; border-color:var(--amber);}
+  .btn.primary:hover{filter:brightness(1.08);}
+  .btn.ghost{color:var(--phosphor);}
+  .btn.ghost:hover{border-color:var(--phosphor);}
+
+  .attr-row{margin-bottom:16px; max-width:520px;}
+
+  .perks-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px;}
+  .perk-card{border:1px solid var(--phosphor-faint); border-radius:6px; padding:18px; background:rgba(185,245,155,.03);}
+  .perk-card svg{width:26px; height:26px; margin-bottom:10px;}
+  .perk-card h4{font-family:'Share Tech Mono',monospace; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; margin:0 0 8px; color:var(--phosphor);}
+  .perk-card p{font-size:12.5px; line-height:1.65; color:var(--phosphor); margin:0; opacity:.8;}
+  .credit-line{font-size:11px; color:var(--phosphor-dim); margin-top:22px; line-height:1.7; max-width:640px;}
+
+  .skill-cat{margin-bottom:26px;}
+  .skill-cat h3{margin-top:0;}
+  .skill-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;}
+  .skill-item{border:1px solid var(--phosphor-faint); border-radius:4px; padding:10px 12px; font-size:12.5px; color:var(--phosphor); display:flex; align-items:center; gap:8px;}
+  .skill-item::before{content:'▸'; color:var(--amber);}
+
+  .proj-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:18px;}
+  .proj-card{border:1px solid var(--phosphor-faint); border-radius:6px; padding:20px; display:flex; flex-direction:column; background:rgba(185,245,155,.03);}
+  .proj-head{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .proj-head h4{font-family:'VT323',monospace; font-size:22px; margin:0; color:var(--phosphor); font-weight:400;}
+  .tag-live{margin-left:auto; color:var(--amber); border:1px solid var(--amber); padding:2px 8px; border-radius:3px; font-size:10px; letter-spacing:.05em;}
+  .proj-card p{font-size:12.5px; line-height:1.65; color:var(--phosphor); opacity:.8; margin:0 0 14px; flex-grow:1;}
+  .stack{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .stack span{font-size:10.5px; border:1px solid var(--phosphor-faint); color:var(--phosphor-dim); padding:3px 8px; border-radius:3px;}
+  .proj-links{display:flex; gap:14px;}
+  .proj-links a{font-size:12px; text-decoration:none; border-bottom:1px solid var(--phosphor-faint);}
+  .proj-links a:hover{color:var(--amber); border-color:var(--amber);}
+
+  .log-entry{display:flex; gap:14px; padding:16px 0; border-bottom:1px dashed var(--phosphor-faint);}
+  .log-entry:last-child{border-bottom:none;}
+  .log-entry .pin{color:var(--amber); font-size:12px; flex-shrink:0; padding-top:3px;}
+  .log-entry h4{margin:0 0 4px; font-size:15px; font-weight:700; color:var(--phosphor); font-family:'Share Tech Mono',monospace;}
+  .log-entry .meta{font-size:11.5px; color:var(--phosphor-dim);}
+  .status-tag{padding:1px 6px; border:1px solid currentColor; border-radius:3px; font-size:10px;}
+  .status-tag.done{color:var(--amber);}
+  .status-tag.wip{color:var(--petal);}
+
+  .lang-row{display:flex; align-items:center; gap:16px; max-width:420px; margin-bottom:14px; font-size:13px;}
+  .lang-row .lname{width:100px;}
+  .lang-bars{display:flex; gap:3px; align-items:flex-end;}
+  .lang-bars i{width:6px; display:block; background:var(--phosphor-faint); border-radius:1px;}
+  .lang-bars i:nth-child(1){height:6px;}
+  .lang-bars i:nth-child(2){height:10px;}
+  .lang-bars i:nth-child(3){height:14px;}
+  .lang-bars i:nth-child(4){height:18px;}
+  .lang-bars i:nth-child(5){height:22px;}
+  .lang-bars i.on{background:var(--amber);}
+  .lang-row .llevel{color:var(--phosphor-dim); font-size:11.5px;}
+
+  .hazard{
+    margin:8px 0 34px; padding:14px 18px;
+    background:repeating-linear-gradient(135deg, var(--amber), var(--amber) 12px, #1a1408 12px, #1a1408 24px);
+    border-radius:4px; text-align:center;
+  }
+  .hazard span{background:var(--screen-bg); color:var(--amber); font-weight:700; font-size:12px; letter-spacing:.06em; padding:7px 16px; border-radius:3px; display:inline-block;}
+
+  .contact-row{display:flex; align-items:baseline; gap:16px; padding:13px 0; border-bottom:1px dashed var(--phosphor-faint); font-size:14px; flex-wrap:wrap;}
+  .contact-row .lbl{color:var(--phosphor-dim); min-width:100px; font-size:12px; letter-spacing:.05em; text-transform:uppercase;}
+  .contact-row a{text-decoration:none; border-bottom:1px solid var(--phosphor-faint);}
+  .contact-row a:hover{color:var(--amber); border-color:var(--amber);}
+
+  footer.credit{text-align:center; font-size:12px; color:var(--phosphor-dim); padding:28px 20px 6px;}
+
+  .tv-controls{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 10px 16px; flex-wrap:wrap;}
+  .channel-buttons{display:flex; gap:8px; flex-wrap:wrap;}
+  .ch-btn{
+    font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:.04em;
+    background:var(--shell-dark); color:var(--phosphor); text-decoration:none;
+    padding:9px 12px; border-radius:3px; box-shadow:inset 0 -2px 0 rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.15);
+  }
+  .ch-btn.active{background:var(--amber); color:#2a1a06; box-shadow:inset 0 -2px 0 rgba(0,0,0,.25);}
+  .knobs{display:flex; gap:14px; align-items:center;}
+  .knob{
+    width:30px; height:30px; border-radius:50%; position:relative;
+    background:radial-gradient(circle at 35% 30%, #9da477, #303c28 72%);
+    box-shadow:0 2px 3px rgba(0,0,0,.5);
+  }
+  .knob::after{content:''; position:absolute; top:4px; left:50%; width:2px; height:9px; background:var(--phosphor-dim); transform:translateX(-50%);}
+  @media (max-width:640px){.knobs{display:none;}}
+
+  .speaker-grille{
+    height:10px; width:130px; margin:0 auto 10px;
+    background:repeating-linear-gradient(90deg, var(--shell-dark) 0 3px, transparent 3px 7px);
+    opacity:.55;
+  }
+  .tv-base{height:16px; background:var(--shell-dark); border-radius:0 0 20px 20px;}
+
+  @media (max-width:760px){
+    section{padding:38px 22px;}
+    .tv-shell{border-radius:18px; padding:16px 12px 0; margin-top:50px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="tv-shell">
+  <svg class="antenna" viewBox="0 0 120 60" aria-hidden="true">
+    <line x1="60" y1="60" x2="18" y2="4" stroke="#3f4a2d" stroke-width="3" stroke-linecap="round"/>
+    <line x1="60" y1="60" x2="102" y2="4" stroke="#3f4a2d" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="60" cy="60" r="5" fill="#3f4a2d"/>
+  </svg>
+
+  <div class="tv-brand-row">
+    <span>TV MILAN · MODELO CE-2026</span>
+    <span class="led"><i></i>LIGADO</span>
+  </div>
+
+  <div class="tv-screen-frame">
+    <div class="tv-screen">
+      <canvas class="static-canvas" aria-hidden="true"></canvas>
+      <div class="scanlines" aria-hidden="true"></div>
+      <div class="vignette" aria-hidden="true"></div>
+      <div class="channel-readout" id="readout"><span class="dot"></span>CH <span id="chNum">01</span> · <span id="chName">SOBRE</span></div>
+
+      <div class="tv-content">
+
+        <section id="sobre">
+          <div class="eyebrow">Portfólio</div>
+          <h1 class="name">Carlos Eduardo Milan Ferreira</h1>
+          <span class="level-badge">NÍVEL 1 · ESTAGIÁRIO EM FORMAÇÃO</span>
+
+          <div class="meter">
+            <div class="meter-label"><span>NÍVEL DE CONFIANÇA</span><span>90%</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:38%"></div></div>
+          </div>
+
+          <p class="lead">Tenho 18 anos, sou estudante de Análise e Desenvolvimento de Sistemas na FATEC Votorantim
+          e venho construindo projetos práticos em Python e desenvolvimento web enquanto aprendo. Curioso por
+          natureza, gosto de entender como as coisas funcionam por baixo do capô e de transformar ideias em
+          interfaces funcionais — do zero ao deploy.</p>
+          <p class="lead">Estou buscando minha primeira oportunidade de estágio em Tecnologia da Informação para
+          aprender com profissionais experientes, contribuir com soluções criativas e evoluir na carreira de
+          desenvolvimento de software.</p>
+
+          <div class="badges">
+            <div class="badge">📍 Sorocaba, SP</div>
+            <div class="badge">🎓 FATEC Votorantim · 2028</div>
+            <div class="badge">🌱 1ª vaga de estágio</div>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn primary" href="#projetos">ver projetos →</a>
+            <a class="btn ghost" href="https://github.com/dudumilan" target="_blank" rel="noopener">github.com/dudumilan</a>
+            <a class="btn ghost" href="https://www.linkedin.com/in/carlos-eduardo-milan-ferreira-bb8587249/" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+
+          <h3>Atributos</h3>
+          <div class="attr-row">
+            <div class="meter-label"><span>Lógica</span><span>80</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:80%"></div></div>
+          </div>
+          <div class="attr-row">
+            <div class="meter-label"><span>Criatividade</span><span>75</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:75%"></div></div>
+          </div>
+          <div class="attr-row">
+            <div class="meter-label"><span>Persistência</span><span>90</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:90%"></div></div>
+          </div>
+          <div class="attr-row">
+            <div class="meter-label"><span>Comunicação</span><span>70</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:70%"></div></div>
+          </div>
+          <div class="attr-row">
+            <div class="meter-label"><span>Aprendizado</span><span>95</span></div>
+            <div class="meter-track"><div class="meter-fill" style="--target:95%"></div></div>
+          </div>
+          <h3>Perks</h3>
+          <div class="perks-grid">
+            <div class="perk-card">
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--phosphor)" stroke-width="2"><polygon points="16,3 27,9.5 27,22.5 16,29 5,22.5 5,9.5"/></svg>
+              <h4>Recompilar</h4>
+              <p>Pega um problema quebrado, desmonta até a raiz e remonta numa versão mais eficiente. Debug não assusta.</p>
+            </div>
+            <div class="perk-card">
+              <svg viewBox="0 0 32 32"><circle cx="16" cy="9" r="4" fill="var(--petal)"/><circle cx="16" cy="23" r="4" fill="var(--petal)"/><circle cx="9" cy="16" r="4" fill="var(--petal)"/><circle cx="23" cy="16" r="4" fill="var(--petal)"/><circle cx="16" cy="16" r="3.4" fill="var(--screen-bg)"/></svg>
+              <h4>Modo vida tranquila</h4>
+              <p>Preza rotina, organização e entrega no prazo. Sem drama, só código limpo e commit no horário certo.</p>
+            </div>
+            <div class="perk-card">
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--gold)" stroke-width="2"><polygon points="16,4 28,10 16,16 4,10"/><polyline points="4,16 16,22 28,16"/><polyline points="4,22 16,28 28,22"/></svg>
+              <h4>Biblioteca de técnicas</h4>
+              <p>Cada linguagem, framework ou bug resolvido vira ferramenta guardada pra próxima batalha — ops, próximo projeto.</p>
+            </div>
+            <div class="perk-card">
+              <svg viewBox="0 0 32 32"><rect x="4" y="19" width="5" height="9" fill="var(--amber)"/><rect x="13.5" y="13" width="5" height="15" fill="var(--amber)"/><rect x="23" y="5" width="5" height="23" fill="var(--amber)"/></svg>
+              <h4>Confiança em alta</h4>
+              <p>Nível júnior, ainda subindo de rank — mas cresce rápido quando alguém aposta e dá a primeira chance.</p>
+            </div>
+            <div class="perk-card">
+              <svg viewBox="0 0 32 32" fill="none" stroke="var(--rust)" stroke-width="2"><circle cx="16" cy="16" r="12.5"/><polygon points="16,7 19,16 16,25 13,16" fill="var(--rust)" stroke="none"/></svg>
+              <h4>Sobrevivência no ermo digital</h4>
+              <p>Aprendeu boa parte sozinho, testando, quebrando e consertando — como quem explora um mapa sem guia.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="habilidades">
+          <div class="eyebrow">Habilidades</div>
+          <h2>O que eu uso no dia a dia</h2>
+          <div class="sub">Tecnologias e ferramentas com as quais já trabalhei nos meus projetos.</div>
+
+          <div class="skill-cat">
+            <h3>Linguagens</h3>
+            <div class="skill-grid"><div class="skill-item">JavaScript</div><div class="skill-item">Python</div></div>
+          </div>
+          <div class="skill-cat">
+            <h3>Frameworks</h3>
+            <div class="skill-grid"><div class="skill-item">Django</div></div>
+          </div>
+          <div class="skill-cat">
+            <h3>Web</h3>
+            <div class="skill-grid">
+              <div class="skill-item">HTML</div><div class="skill-item">CSS</div>
+              <div class="skill-item">Front-end</div><div class="skill-item">Back-end</div>
+            </div>
+          </div>
+          <div class="skill-cat">
+            <h3>Banco de dados</h3>
+            <div class="skill-grid"><div class="skill-item">SQL</div></div>
+          </div>
+          <div class="skill-cat">
+            <h3>Ferramentas</h3>
+            <div class="skill-grid">
+              <div class="skill-item">GitHub</div><div class="skill-item">VS Code</div><div class="skill-item">Figma</div>
+            </div>
+          </div>
+          <div class="skill-cat">
+            <h3>Metodologias</h3>
+            <div class="skill-grid">
+              <div class="skill-item">Kanban</div><div class="skill-item">Design Thinking</div><div class="skill-item">5W2H</div>
+            </div>
+          </div>
+          <div class="skill-cat">
+            <h3>Outros</h3>
+            <div class="skill-grid"><div class="skill-item">Chatbot</div><div class="skill-item">Dashboard</div></div>
+          </div>
+        </section>
+
+        <section id="projetos">
+          <div class="eyebrow">Projetos</div>
+          <h2>Coisas que eu construí</h2>
+          <div class="sub">Do jogo feito por diversão ao site que virou cliente real.</div>
+
+          <div class="proj-grid">
+            <div class="proj-card">
+              <div class="proj-head"><h4>MCMusic</h4><span class="tag-live">no ar</span></div>
+              <p>Player de música web inspirado em plataformas de streaming. Reprodução de faixas, criação e
+              gerenciamento de playlists, favoritos com localStorage e busca dinâmica — interface responsiva.</p>
+              <div class="stack"><span>HTML</span><span>CSS</span><span>Tailwind</span><span>JavaScript</span></div>
+              <div class="proj-links">
+                <a href="https://dudumilan.github.io/mcmusic/" target="_blank" rel="noopener">ver site ↗</a>
+                <a href="https://github.com/dudumilan/mcmusic" target="_blank" rel="noopener">código ↗</a>
+              </div>
+            </div>
+
+            <div class="proj-card">
+              <div class="proj-head"><h4>Espaço InternaMente</h4><span class="tag-live">no ar</span></div>
+              <p>Site institucional para uma clínica de Psicologia, Psicanálise e Neuropsicopedagogia em Sorocaba:
+              apresentação da equipe, áreas de atuação, localização e contato direto via WhatsApp.</p>
+              <div class="stack"><span>HTML</span><span>CSS</span><span>Deploy</span></div>
+              <div class="proj-links">
+                <a href="https://espacointernamente.onrender.com" target="_blank" rel="noopener">ver site ↗</a>
+              </div>
+            </div>
+
+            <div class="proj-card">
+              <div class="proj-head"><h4>MK9 Interface</h4><span class="tag-live">no ar</span></div>
+              <p>Recriação da interface do menu de um clássico jogo de luta: vídeo de fundo, trilha sonora,
+              efeitos sonoros de navegação e telas de seleção de personagem, história e treinamento.</p>
+              <div class="stack"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+              <div class="proj-links">
+                <a href="https://dudumilan.github.io/Mortal-Kombat/" target="_blank" rel="noopener">ver site ↗</a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="formacao">
+          <div class="eyebrow">Formação</div>
+          <h2>Minha trajetória de estudos</h2>
+
+          <div class="log-entry">
+            <div class="pin">●</div>
+            <div>
+              <h4>Desenvolvimento de Software Multiplataforma</h4>
+              <div class="meta">FATEC Votorantim · <span class="status-tag wip">CURSANDO</span> · previsão de conclusão em 2028</div>
+            </div>
+          </div>
+          <div class="log-entry">
+            <div class="pin">●</div>
+            <div>
+              <h4>Análise e Desenvolvimento de Sistemas</h4>
+              <div class="meta">EE Prof. Joaquim Izidoro · fev/2023 – dez/2025 · <span class="status-tag done">COMPLETO</span></div>
+            </div>
+          </div>
+          <div class="log-entry">
+            <div class="pin">●</div>
+            <div>
+              <h4>Carreiras Digitais: Business, Marketing Digital, Design, Programação e Inglês</h4>
+              <div class="meta">Start Pro Formação Profissional · fev/2022 – fev/2024 · <span class="status-tag wip">INCOMPLETO</span></div>
+            </div>
+          </div>
+          <div class="log-entry">
+            <div class="pin">●</div>
+            <div>
+              <h4>Treinamento de Orientação Profissional</h4>
+              <div class="meta">Start Pro Formação Profissional · jan/2022 – mar/2022 · <span class="status-tag done">COMPLETO</span></div>
+            </div>
+          </div>
+
+          <h3>Idiomas</h3>
+          <div class="lang-row"><span class="lname">Português</span><div class="lang-bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div><span class="llevel">nativo</span></div>
+          <div class="lang-row"><span class="lname">Inglês</span><div class="lang-bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div><span class="llevel">avançado</span></div>
+          <div class="lang-row"><span class="lname">Espanhol</span><div class="lang-bars"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div><span class="llevel">intermediário</span></div>
+        </section>
+
+        <section id="contato">
+          <div class="eyebrow">Contato</div>
+          <h2>Vamos conversar</h2>
+          <div class="sub">Sobre uma oportunidade de estágio em Tecnologia da Informação.</div>
+
+          <div class="hazard"><span>⚠ Disponível para estágio ⚠</span></div>
+
+          <div class="contact-row"><span class="lbl">E-mail</span><a href="mailto:carloseduardomilann@gmail.com">carloseduardomilann@gmail.com</a></div>
+          <div class="contact-row"><span class="lbl">Telefone</span><span>+55 (11) 93020-5312</span></div>
+          <div class="contact-row"><span class="lbl">LinkedIn</span><a href="https://www.linkedin.com/in/carlos-eduardo-milan-ferreira-bb8587249/" target="_blank" rel="noopener">carlos-eduardo-milan-ferreira</a></div>
+          <div class="contact-row"><span class="lbl">GitHub</span><a href="https://github.com/dudumilan" target="_blank" rel="noopener">github.com/dudumilan</a></div>
+        </section>
+
+        <footer class="credit">Obrigado por chegar até aqui 👋</footer>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="tv-controls">
+    <nav class="channel-buttons" aria-label="Seções do portfólio">
+      <a href="#sobre" data-ch="01" data-name="SOBRE" class="ch-btn active">01 SOBRE</a>
+      <a href="#habilidades" data-ch="02" data-name="HABILIDADES" class="ch-btn">02 HABILIDADES</a>
+      <a href="#projetos" data-ch="03" data-name="PROJETOS" class="ch-btn">03 PROJETOS</a>
+      <a href="#formacao" data-ch="04" data-name="FORMAÇÃO" class="ch-btn">04 FORMAÇÃO</a>
+      <a href="#contato" data-ch="05" data-name="CONTATO" class="ch-btn">05 CONTATO</a>
+    </nav>
+    <div class="knobs"><div class="knob"></div><div class="knob"></div></div>
+  </div>
+  <div class="speaker-grille"></div>
+  <div class="tv-base"></div>
+</div>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const canvas = document.querySelector('.static-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 128, H = 72;
+  canvas.width = W; canvas.height = H;
+  function drawStatic(){
+    const img = ctx.createImageData(W,H);
+    for(let i=0;i<img.data.length;i+=4){
+      const v = Math.random()*255;
+      img.data[i]=v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3]=255;
+    }
+    ctx.putImageData(img,0,0);
+  }
+  drawStatic();
+  if(!reduce){ setInterval(drawStatic, 90); }
+
+  function burst(ms){
+    if(reduce) return;
+    canvas.classList.add('burst');
+    setTimeout(()=>canvas.classList.remove('burst'), ms || 200);
+  }
+  window.addEventListener('load', ()=>burst(650));
+  if(!reduce){ setInterval(()=>burst(150), 26000); }
+
+  const buttons = document.querySelectorAll('.ch-btn');
+  const sections = document.querySelectorAll('section[id]');
+  const readout = document.getElementById('readout');
+  const chNum = document.getElementById('chNum');
+  const chName = document.getElementById('chName');
+  let readoutTimer;
+
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      buttons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      chNum.textContent = btn.dataset.ch;
+      chName.textContent = btn.dataset.name;
+      readout.classList.add('show');
+      clearTimeout(readoutTimer);
+      readoutTimer = setTimeout(()=>readout.classList.remove('show'), 1800);
+      burst(180);
+    });
+  });
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = entry.target.getAttribute('id');
+        buttons.forEach(b=>b.classList.toggle('active', b.getAttribute('href') === '#'+id));
+      }
+    });
+  }, {rootMargin:'-35% 0px -55% 0px'});
+  sections.forEach(s=>io.observe(s));
+</script>
+
+</body>
+</html>
