@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>C.E.M.FERREIRA // TERMINAL</title>
+<title>TERMINAL</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
@@ -327,7 +327,7 @@
 <body>
 <div class="machine">
   <div class="machine-header">
-    <div class="plate">CEMF&nbsp;TERMINAL&nbsp;<b>MK.88</b>&nbsp;&mdash;&nbsp;SOROCABA SYSTEMS DIV.</div>
+    <div class="plate">CEMF&nbsp;TERMINAL&nbsp;<b>MK.88</b>&nbsp;&mdash;&nbsp;DUDUMILAN CORP.</div>
     <div class="leds"><span class="led on"></span><span class="led"></span><span class="led"></span></div>
   </div>
   <div class="machine-body">
@@ -360,7 +360,7 @@
             <section class="panel active" id="panel-home">
               <div class="home-header">
                 <div class="profile-photo">
-                  <img src="" alt="Portrait of Carlos Eduardo Milan Ferreira">
+                  <img src="foto.jpeg" alt="Portrait of Carlos Eduardo Milan Ferreira">
                 </div>
                 <div class="home-text">
                   <h1>CARLOS EDUARDO MILAN FERREIRA<span class="cursor"></span></h1>
@@ -445,17 +445,6 @@
                 </article>
                 <article class="project-card">
                   <div class="project-shot">
-                    <img src="" alt="Vagalume Clone screenshot">
-                  </div>
-                  <div class="project-info">
-                    <h3>Vagalume Clone</h3>
-                    <p>A front-end recreation of a lyrics-platform interface, focused on faithfully reproducing layout and structure.</p>
-                    <div><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">Python</span></div>
-                    <a href="https://github.com/dudumilan/vagalume" target="_blank" rel="noopener">VIEW REPOSITORY &rarr;</a>
-                  </div>
-                </article>
-                <article class="project-card">
-                  <div class="project-shot">
                     <img src="mortalkombat.png" alt="Mortal Kombat project screenshot">
                   </div>
                   <div class="project-info">
@@ -463,16 +452,6 @@
                     <p>A front-end project focused on layout composition and interactivity.</p>
                     <div><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
                     <a href="https://github.com/dudumilan/Mortal-Kombat" target="_blank" rel="noopener">VIEW REPOSITORY &rarr;</a>
-                  </div>
-                </article>
-                <article class="project-card">
-                  <div class="project-shot">
-                    <img src=" alt="Reserved project slot">
-                  </div>
-                  <div class="project-info">
-                    <h3>[ NEXT PROJECT SLOT ]</h3>
-                    <p style="color:var(--phosphor-dim);">Reserved slot &mdash; drop in your next build: title, description, tech tags and a link to the repository.</p>
-                    <div><span class="tag">TBD</span></div>
                   </div>
                 </article>
               </div>
@@ -494,7 +473,7 @@
       <div class="cli-bar">
         <div class="cli-log" id="cliLog"></div>
         <div class="cli-row">
-          <span class="prompt">GUEST@CEMF:~$</span>
+          <span class="prompt">USER@CEMF:~$</span>
           <input id="cliInput" type="text" placeholder="type 'help'" autocomplete="off" spellcheck="false">
         </div>
       </div>
@@ -510,15 +489,15 @@
 <script>
 (function(){
   const bootLines = [
-    "CEMF TERMINAL MK.88 -- SOROCABA SYSTEMS DIV.",
-    "COPYRIGHT SOROCABA SYSTEMS 2026. ALL RIGHTS RESERVED.",
+    "CEMF TERMINAL MK.88 -- DUDUMILAN CORP.",
+    "COPYRIGHT DUDUMILAN SISTEMS 2026. ALL RIGHTS RESERVED.",
     "",
     "INITIALIZING TERMLINK...................... OK",
     "LOADING USER PROFILE...C.E.MILAN FERREIRA... OK",
     "MOUNTING DIRECTORY: /home /about /skills /projects /contact",
     "STATUS: SEEKING FIRST IT INTERNSHIP",
     "",
-    "ALL SYSTEMS NOMINAL. WELCOME, GUEST.",
+    "ALL SYSTEMS NOMINAL. WELCOME, USER.",
   ];
   const bootTextEl = document.getElementById('bootText');
   const bootOverlay = document.getElementById('bootOverlay');
@@ -613,14 +592,14 @@
     const cmd = raw.toLowerCase();
     cliInput.value = '';
     if(!raw) return;
-    logLine('GUEST@CEMF:~$ ' + raw);
+    logLine('USER@CEMF:~$ ' + raw);
     if(validTabs.includes(cmd)){
       openTab(cmd);
       logLine('> opening /' + cmd);
     } else if(cmd === 'help'){
       logLine('> commands: home, about, skills, projects, contact, github, linkedin, email, whoami, date, clear');
     } else if(cmd === 'whoami'){
-      logLine('> GUEST -- ACCESS LEVEL: PUBLIC');
+      logLine('> USER -- ACCESS LEVEL: PUBLIC');
     } else if(cmd === 'date'){
       logLine('> ' + new Date().toString());
     } else if(cmd === 'github'){
@@ -633,7 +612,7 @@
       logLine('> mailto:carloseduardomilann@gmail.com');
       window.location.href = 'mailto:carloseduardomilann@gmail.com';
     } else if(cmd === 'sudo' || cmd.startsWith('sudo ')){
-      logLine('> PERMISSION DENIED: GUEST ACCOUNT');
+      logLine('> PERMISSION DENIED: USER ACCOUNT');
     } else if(cmd === 'clear'){
       cliLog.innerHTML = '';
     } else {
