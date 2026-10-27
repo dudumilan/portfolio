@@ -219,35 +219,99 @@
   .panel{ display:none; }
   .panel.active{ display:block; animation:panelIn .3s steps(8) both; }
   @keyframes panelIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:translateY(0);} }
-  .loading-overlay{
-    position:absolute; inset:0; z-index:10;
+
+  /* ================= OLD TV TURN-ON EFFECT ================= */
+  .tv-overlay{
+    position:absolute; inset:0; z-index:8;
     display:none;
-    flex-direction:column; align-items:center; justify-content:center; gap:14px;
-    background:rgba(2,15,7,.92);
+    background:#000;
+    overflow:hidden;
+    pointer-events:none;
   }
-  .loading-overlay.show{ display:flex; }
-  .loading-label{
+  .tv-overlay.run{
+    display:block;
+    animation:tvOverlay 1.45s linear forwards;
+  }
+  /* black out fast, hold while the beam opens, then fade into the blurry picture */
+  @keyframes tvOverlay{
+    0%{ opacity:0; }
+    8%{ opacity:1; }
+    55%{ opacity:1; }
+    100%{ opacity:0; }
+  }
+  .tv-beam{
+    position:absolute; left:50%; top:50%;
+    width:0; height:2px;
+    transform:translate(-50%,-50%);
+    background:#d9ffe1;
+    box-shadow:0 0 14px 3px var(--glow), 0 0 40px 10px rgba(61,255,94,.35);
+    opacity:0;
+  }
+  .tv-overlay.run .tv-beam{ animation:tvBeam .68s cubic-bezier(.5,0,.6,1) .12s forwards; }
+  /* dot -> horizontal line -> line holds -> expands into a full white flash */
+  @keyframes tvBeam{
+    0%{ width:0; height:2px; opacity:1; }
+    45%{ width:100%; height:2px; opacity:1; }
+    65%{ width:100%; height:3px; opacity:1; }
+    100%{ width:100%; height:100%; opacity:1; }
+  }
+  .tv-bar{
+    position:absolute; left:0; right:0; top:-15%; height:12%;
+    background:linear-gradient(to bottom, transparent, rgba(166,255,184,.4), transparent);
+    opacity:0;
+  }
+  .tv-overlay.run .tv-bar{ animation:tvBar .65s steps(9,end) .8s both; }
+  .tv-overlay.run .tv-bar.b2{ height:5%; animation-delay:.95s; animation-duration:.5s; }
+  @keyframes tvBar{ 0%{ top:-15%; opacity:1; } 100%{ top:110%; opacity:1; } }
+  .tv-label{
+    position:absolute; left:18px; bottom:14px;
     font-family:var(--font-display);
-    font-size:22px;
-    letter-spacing:3px;
+    font-size:20px; letter-spacing:3px;
     color:var(--phosphor);
     text-shadow:0 0 8px var(--glow);
+    animation:blink .5s steps(1) infinite;
   }
-  .loading-track{
-    width:220px; height:10px;
-    border:1px solid var(--phosphor-dim);
-    border-radius:2px;
-    overflow:hidden;
-    background:rgba(61,255,94,.06);
+
+  /* the picture arriving: shaky, chromatic, out of focus -> sharp */
+  #panels.tv-focus{
+    animation:
+      tvBlur 1.05s cubic-bezier(.25,.6,.3,1) both,
+      tvJitter 1.05s steps(1,end) both,
+      tvChroma 1.05s ease-out both;
   }
-  .loading-fill{
-    height:100%; width:0%;
-    background:linear-gradient(90deg, var(--phosphor-dim), var(--phosphor));
-    box-shadow:0 0 8px var(--glow);
+  @keyframes tvBlur{
+    0%{ filter:blur(14px) brightness(2.6) contrast(1.8) saturate(.4); }
+    30%{ filter:blur(8px) brightness(1.7) contrast(1.5) saturate(.8); }
+    60%{ filter:blur(3.5px) brightness(1.25) contrast(1.2); }
+    85%{ filter:blur(1px) brightness(1.05) contrast(1.05); }
+    100%{ filter:blur(0) brightness(1) contrast(1); }
   }
-  .loading-fill.animate{ animation:loadFill .5s linear forwards; }
-  @keyframes loadFill{ from{ width:0%; } to{ width:100%; } }
-  .loading-sub{ font-size:11px; letter-spacing:1px; color:var(--phosphor-dim); }
+  @keyframes tvJitter{
+    0%{ transform:translateX(-16px) skewX(9deg) scaleY(1.08); }
+    6%{ transform:translateX(20px) skewX(-7deg) scaleY(.96); }
+    12%{ transform:translateY(-7%) translateX(-10px) skewX(4deg); }
+    18%{ transform:translateY(5%) translateX(12px) skewX(-3deg); }
+    26%{ transform:translateX(-8px) skewX(5deg) scaleY(1.03); }
+    34%{ transform:translateY(-2%) translateX(6px); }
+    42%{ transform:translateX(-5px) skewX(-2deg); }
+    52%{ transform:translateY(1%) translateX(3px); }
+    62%{ transform:translateX(-2px); }
+    72%{ transform:translateX(2px) skewX(.8deg); }
+    82%{ transform:translateX(-1px); }
+    92%{ transform:translateX(1px); }
+    100%{ transform:none; }
+  }
+  @keyframes tvChroma{
+    0%{ text-shadow:-7px 0 rgba(255,0,70,.75), 7px 0 rgba(0,170,255,.75); }
+    60%{ text-shadow:-3px 0 rgba(255,0,70,.45), 3px 0 rgba(0,170,255,.45); }
+    100%{ text-shadow:0 0 3px rgba(61,255,94,.65), 0 0 10px rgba(61,255,94,.25); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tv-overlay.run{ animation-duration:.3s; }
+    #panels.tv-focus{ animation:none; }
+  }
+  /* ========================================================== */
+
   .tag{ display:inline-block; font-size:12px; letter-spacing:1px; border:1px solid var(--phosphor-dim); color:var(--phosphor); padding:2px 8px; border-radius:2px; margin:0 6px 6px 0; }
   .kv{ display:grid; grid-template-columns:170px 1fr; gap:4px 14px; margin-bottom:16px; }
   .kv dt{ color:var(--phosphor-dim); }
@@ -289,6 +353,40 @@
     .project-shot{ flex:0 0 auto; width:100%; }
     .home-header{ flex-direction:column; align-items:center; text-align:center; }
   }
+
+  
+  .dl-box{
+    border:1px solid var(--phosphor-faint);
+    border-radius:4px;
+    padding:18px;
+    background:rgba(61,255,94,.03);
+    margin-bottom:18px;
+  }
+  .dl-btn{
+    display:inline-block;
+    font-family:var(--font-display);
+    font-size:24px;
+    letter-spacing:3px;
+    text-decoration:none;
+    color:var(--phosphor-bright);
+    border:2px solid var(--phosphor);
+    border-radius:3px;
+    padding:10px 22px;
+    background:rgba(61,255,94,.08);
+    box-shadow:0 0 12px var(--glow), inset 0 0 10px rgba(61,255,94,.15);
+    cursor:pointer;
+    transition:background .15s, color .15s, box-shadow .15s;
+  }
+  .dl-btn:hover, .dl-btn:focus-visible{
+    background:var(--phosphor);
+    color:#02120a;
+    text-shadow:none;
+    box-shadow:0 0 22px var(--glow);
+    outline:none;
+  }
+  .dl-btn.small{ font-size:19px; padding:7px 16px; letter-spacing:2px; }
+  .dl-note{ margin:12px 0 0; font-size:12px; color:var(--phosphor-dim); letter-spacing:1px; }
+
   .contact-list{ list-style:none; padding:0; margin:0; }
   .contact-list li{ padding:10px 0; border-bottom:1px dashed var(--phosphor-faint); display:flex; gap:12px; }
   .contact-list li span.label{ width:110px; flex:0 0 110px; color:var(--phosphor-dim); }
@@ -336,6 +434,7 @@
       <button class="tab" data-tab="about">ABOUT</button>
       <button class="tab" data-tab="skills">SKILLS</button>
       <button class="tab" data-tab="projects">PROJECTS</button>
+      <button class="tab" data-tab="resume">RESUME</button>
       <button class="tab" data-tab="contact">CONTACT</button>
       <div class="tabs-footer">
         <button class="mute-btn" id="muteBtn">SOUND: ON</button>
@@ -347,16 +446,20 @@
         <div class="scanlines"></div>
         <canvas id="staticCanvas"></canvas>
         <div class="vignette"></div>
+
+        
+        <div class="tv-overlay" id="tvOverlay">
+          <div class="tv-beam"></div>
+          <div class="tv-bar"></div>
+          <div class="tv-bar b2"></div>
+          <div class="tv-label" id="tvLabel">TUNING...</div>
+        </div>
+
         <div class="screen-content" id="screenContent">
           <div class="boot-overlay" id="bootOverlay">
             <pre id="bootText"></pre>
           </div>
           <div class="panels" id="panels" hidden>
-            <div class="loading-overlay" id="loadingOverlay">
-              <div class="loading-label" id="loadingLabel">LOADING /ABOUT</div>
-              <div class="loading-track"><div class="loading-fill" id="loadingFill"></div></div>
-              <div class="loading-sub">DECRYPTING SECTOR&hellip; PLEASE STAND BY</div>
-            </div>
             <section class="panel active" id="panel-home">
               <div class="home-header">
                 <div class="profile-photo">
@@ -368,6 +471,7 @@
                 </div>
               </div>
               <p>I'm 18 years old and passionate about technology and programming. I build practical projects with a focus on Python and web development, and I'm currently looking for my first IT internship &mdash; a place to learn from experienced professionals, apply what I know, and grow into a software development career. I'm dedicated, curious, and always learning, and I like bringing creative, efficient solutions to the table.</p>
+              <p><a class="dl-btn small" href="curriculo-carlos-milan.pdf" download="Curriculo-Carlos-Eduardo-Milan-Ferreira.pdf" data-download>&#9660; DOWNLOAD RESUME</a></p>
               <p style="color:var(--phosphor-dim);">&gt; Use the panel on the left to open a directory, or type <b style="color:var(--phosphor);">help</b> in the command line below.</p>
             </section>
             <section class="panel" id="panel-about">
@@ -456,6 +560,20 @@
                 </article>
               </div>
             </section>
+            <section class="panel" id="panel-resume">
+              <h2>RESUME</h2>
+              <p>&gt; File located. Ready for transfer.</p>
+              <div class="dl-box">
+                <dl class="kv">
+                  <dt>FILE</dt><dd>curriculo-carlos-milan.pdf</dd>
+                  <dt>FORMAT</dt><dd>PDF</dd>
+                  <dt>LANGUAGE</dt><dd>Portuguese (BR)</dd>
+                  <dt>CONTENTS</dt><dd>Objective, education, achievements, technical skills, projects, courses and languages</dd>
+                </dl>
+                <a class="dl-btn" href="curriculo-carlos-milan.pdf" download="Curriculo-Carlos-Eduardo-Milan-Ferreira.pdf" data-download>&#9660; DOWNLOAD RESUME.PDF</a>
+                <p class="dl-note">&gt; Tip: you can also type <b style="color:var(--phosphor);">resume</b> in the command line.</p>
+              </div>
+            </section>
             <section class="panel" id="panel-contact">
               <h2>CONTACT</h2>
               <ul class="contact-list">
@@ -464,6 +582,7 @@
                 <li><span class="label">EMAIL</span><a href="mailto:carloseduardomilann@gmail.com">carloseduardomilann@gmail.com</a></li>
                 <li><span class="label">GITHUB</span><a href="https://github.com/dudumilan" target="_blank" rel="noopener">github.com/dudumilan</a></li>
                 <li><span class="label">LINKEDIN</span><a href="https://www.linkedin.com/in/carlos-eduardo-milan-ferreira-bb8587249/" target="_blank" rel="noopener">linkedin.com/in/carlos-eduardo-milan-ferreira</a></li>
+                <li><span class="label">RESUME</span><a href="curriculo-carlos-milan.pdf" download="Curriculo-Carlos-Eduardo-Milan-Ferreira.pdf" data-download>curriculo-carlos-milan.pdf</a></li>
               </ul>
               <p style="margin-top:18px;color:var(--phosphor-dim);">&gt; End of transmission._</p>
             </section>
@@ -494,7 +613,7 @@
     "",
     "INITIALIZING TERMLINK...................... OK",
     "LOADING USER PROFILE...C.E.MILAN FERREIRA... OK",
-    "MOUNTING DIRECTORY: /home /about /skills /projects /contact",
+    "MOUNTING DIRECTORY: /home /about /skills /projects /resume /contact",
     "STATUS: SEEKING FIRST IT INTERNSHIP",
     "",
     "ALL SYSTEMS NOMINAL. WELCOME, USER.",
@@ -503,6 +622,73 @@
   const bootOverlay = document.getElementById('bootOverlay');
   const panels = document.getElementById('panels');
   let li = 0, ci = 0;
+
+  /* ---------- audio ---------- */
+  let audioCtx = null;
+  let muted = false;
+  const muteBtn = document.getElementById('muteBtn');
+  function getCtx(){
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+  function beep(freq, dur){
+    if(muted) return;
+    try{
+      const ac = getCtx();
+      const osc = ac.createOscillator();
+      const gain = ac.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.value = 0.03;
+      osc.connect(gain).connect(ac.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + dur);
+      osc.stop(ac.currentTime + dur);
+    }catch(e){}
+  }
+  // CRT power-on: rising whine + noise burst when the picture appears
+  function tvSound(){
+    if(muted) return;
+    try{
+      const ac = getCtx();
+      const t = ac.currentTime;
+      const osc = ac.createOscillator();
+      const g = ac.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(60, t + .1);
+      osc.frequency.exponentialRampToValueAtTime(1500, t + .75);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(0.04, t + .6);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + .9);
+      osc.connect(g).connect(ac.destination);
+      osc.start(t); osc.stop(t + .95);
+
+      const len = Math.floor(ac.sampleRate * .5);
+      const buf = ac.createBuffer(1, len, ac.sampleRate);
+      const data = buf.getChannelData(0);
+      for(let i = 0; i < len; i++) data[i] = (Math.random()*2-1) * (1 - i/len);
+      const src = ac.createBufferSource();
+      const ng = ac.createGain();
+      ng.gain.value = 0.05;
+      src.buffer = buf;
+      src.connect(ng).connect(ac.destination);
+      src.start(t + .75);
+    }catch(e){}
+  }
+  muteBtn.addEventListener('click', ()=>{
+    muted = !muted;
+    muteBtn.textContent = 'SOUND: ' + (muted ? 'OFF' : 'ON');
+  });
+
+  /* ---------- TV focus effect ---------- */
+  function runFocus(){
+    panels.classList.remove('tv-focus');
+    void panels.offsetWidth;
+    panels.classList.add('tv-focus');
+    setTimeout(() => panels.classList.remove('tv-focus'), 1100);
+  }
+
+  /* ---------- boot ---------- */
   function typeBoot(){
     if(li >= bootLines.length){
       setTimeout(()=>{
@@ -511,6 +697,7 @@
         setTimeout(()=>{
           bootOverlay.style.display = 'none';
           panels.hidden = false;
+          runFocus();
         }, 420);
       }, 500);
       return;
@@ -526,60 +713,65 @@
     }
   }
   typeBoot();
-  let audioCtx = null;
-  let muted = false;
-  const muteBtn = document.getElementById('muteBtn');
-  function beep(freq, dur){
-    if(muted) return;
-    try{
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.value = freq;
-      gain.gain.value = 0.03;
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
-      osc.stop(audioCtx.currentTime + dur);
-    }catch(e){}
-  }
-  muteBtn.addEventListener('click', ()=>{
-    muted = !muted;
-    muteBtn.textContent = 'SOUND: ' + (muted ? 'OFF' : 'ON');
-  });
+
+  /* ---------- tabs ---------- */
   const tabs = document.querySelectorAll('.tab');
   const screenContent = document.getElementById('screenContent');
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  const loadingLabel = document.getElementById('loadingLabel');
-  const loadingFill = document.getElementById('loadingFill');
+  const tvOverlay = document.getElementById('tvOverlay');
+  const tvLabel = document.getElementById('tvLabel');
   let isLoading = false;
   let currentTab = 'home';
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const SWAP_AT = reduceMotion ? 150 : 800;   // when the panel changes (screen fully white/black)
+  const END_AT  = reduceMotion ? 300 : 1450;  // when the effect ends
+
   function openTab(name){
     if(isLoading || name === currentTab) return;
     isLoading = true;
     tabs.forEach(t => t.disabled = true);
     beep(440, .04);
-    loadingLabel.textContent = 'LOADING /' + name.toUpperCase();
-    loadingFill.classList.remove('animate');
-    void loadingFill.offsetWidth;
-    loadingFill.classList.add('animate');
-    loadingOverlay.classList.add('show');
+    tvLabel.textContent = 'TUNING /' + name.toUpperCase() + ' ...';
+    tvOverlay.classList.remove('run');
+    void tvOverlay.offsetWidth;
+    tvOverlay.classList.add('run');
+    tvSound();
     setTimeout(() => {
       tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === name));
       document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
       screenContent.scrollTop = 0;
       currentTab = name;
-      beep(660, .05);
-      loadingOverlay.classList.remove('show');
+      runFocus();
+    }, SWAP_AT);
+    setTimeout(() => {
+      tvOverlay.classList.remove('run');
       tabs.forEach(t => t.disabled = false);
       isLoading = false;
-    }, 550);
+    }, END_AT);
   }
   tabs.forEach(t => t.addEventListener('click', () => openTab(t.dataset.tab)));
+
+ 
+  const RESUME_URL = 'curriculo-carlos-milan.pdf';
+  const RESUME_NAME = 'Curriculo-Carlos-Eduardo-Milan-Ferreira.pdf';
+  function downloadResume(){
+    const a = document.createElement('a');
+    a.href = RESUME_URL;
+    a.download = RESUME_NAME;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+  document.querySelectorAll('[data-download]').forEach(el => {
+    el.addEventListener('click', () => {
+      beep(880, .06);
+      logLine('> transferring ' + RESUME_URL + ' ... OK');
+    });
+  });
+
+
   const cliInput = document.getElementById('cliInput');
   const cliLog = document.getElementById('cliLog');
-  const validTabs = ['home','about','skills','projects','contact'];
+  const validTabs = ['home','about','skills','projects','resume','contact'];
   function logLine(text){
     const d = document.createElement('div');
     d.textContent = text;
@@ -597,7 +789,10 @@
       openTab(cmd);
       logLine('> opening /' + cmd);
     } else if(cmd === 'help'){
-      logLine('> commands: home, about, skills, projects, contact, github, linkedin, email, whoami, date, clear');
+      logLine('> commands: home, about, skills, projects, resume, contact, download, github, linkedin, email, whoami, date, clear');
+    } else if(cmd === 'download' || cmd === 'cv'){
+      logLine('> transferring ' + RESUME_URL + ' ... OK');
+      downloadResume();
     } else if(cmd === 'whoami'){
       logLine('> USER -- ACCESS LEVEL: PUBLIC');
     } else if(cmd === 'date'){
@@ -620,6 +815,8 @@
     }
     beep(300, .03);
   });
+
+  /* ---------- static noise, glitch, clock ---------- */
   const canvas = document.getElementById('staticCanvas');
   const ctx = canvas.getContext('2d');
   const NW = 96, NH = 60;
